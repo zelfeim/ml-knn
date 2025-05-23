@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ml-knn", "ml-knn\ml-knn.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris", "Iris\Iris.csproj", "{3154504C-BF51-4C25-99BF-F87998750FD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris.Tests", "Iris.Tests\Iris.Tests.csproj", "{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{3154504C-BF51-4C25-99BF-F87998750FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3154504C-BF51-4C25-99BF-F87998750FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3154504C-BF51-4C25-99BF-F87998750FD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

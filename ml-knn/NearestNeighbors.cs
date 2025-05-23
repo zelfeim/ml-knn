@@ -10,6 +10,7 @@ public class NearestNeighbors<TClassification>(
 {
     private List<IData<TClassification>> DataSet { get; } = [];
     private IClassifier<TClassification> DataClassifier { get; } = dataClassifier;
+
     private IDataFactory<IData<TClassification>, TClassification> DataFactory { get; } =
         dataFactory;
 
@@ -31,6 +32,30 @@ public class NearestNeighbors<TClassification>(
     public TClassification Classify(int k, IData<TClassification> data, IMetric metric)
     {
         return DataClassifier.Classify(k, data, DataSet, metric);
+    }
+
+    public TClassification Classify(int k, IData<TClassification> data, IMetric metric,
+        List<IData<TClassification>> dataSet)
+    {
+        return DataClassifier.Classify(k, data, dataSet, metric);
+    }
+
+    public void TestClassification(int k, IMetric metric)
+    {
+        var errorCount = 0;
+
+        foreach (var data in DataSet)
+        {
+            var testSet = DataSet.Except([data]).ToList();
+            var classification = Classify(k, data, metric, testSet);
+            var expectedClassification = data.Classification;
+
+            if (!classification.Equals(expectedClassification)) errorCount++;
+        }
+
+        var errorRate = errorCount / (float)DataSet.Count;
+
+        Console.WriteLine($"Error rate: {errorRate}");
     }
 }
 

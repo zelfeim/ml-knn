@@ -8,7 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ml-knn\ml-knn.csproj" />
+        <ProjectReference Include="..\ml-knn\ml-knn.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None CopyToOutputDirectory="Always" Include="iris.csv"></None>
     </ItemGroup>
 
 </Project>
