@@ -7,6 +7,6 @@ public class ManhattanMetric : MetricBase
         Validate(xValues, yValues);
 
         var sum = xValues.Select((t, i) => Math.Abs(t - yValues[i])).Sum();
-        return sum; 
+        return sum;
     }
 }

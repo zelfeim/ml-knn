@@ -3,13 +3,11 @@ using ml_knn.Metrics;
 namespace ml_knn;
 
 public class NearestNeighbors<TClassification>(
-    IDataFactory<IData<TClassification>, TClassification> dataFactory,
-    IClassifier<TClassification> dataClassifier
+    IDataFactory<IData<TClassification>, TClassification> dataFactory
 )
-    where TClassification : Enum
+    where TClassification : struct, Enum
 {
     private List<IData<TClassification>> DataSet { get; } = [];
-    private IClassifier<TClassification> DataClassifier { get; } = dataClassifier;
 
     private IDataFactory<IData<TClassification>, TClassification> DataFactory { get; } =
         dataFactory;
@@ -29,20 +27,35 @@ public class NearestNeighbors<TClassification>(
         }
     }
 
-    public TClassification Classify(int k, IData<TClassification> data, IMetric metric)
+    public TClassification? Classify(int k, IData<TClassification> data, IMetric metric)
     {
-        return DataClassifier.Classify(k, data, DataSet, metric);
+        return Classifier.Classify<TClassification, IData<TClassification>>(
+            k,
+            data,
+            DataSet,
+            metric
+        );
     }
 
-    public TClassification Classify(int k, IData<TClassification> data, IMetric metric,
-        List<IData<TClassification>> dataSet)
+    public TClassification? Classify(
+        int k,
+        IData<TClassification> data,
+        IMetric metric,
+        List<IData<TClassification>> dataSet
+    )
     {
-        return DataClassifier.Classify(k, data, dataSet, metric);
+        return Classifier.Classify<TClassification, IData<TClassification>>(
+            k,
+            data,
+            dataSet,
+            metric
+        );
     }
 
     public void TestClassification(int k, IMetric metric)
     {
         var errorCount = 0;
+        var misses = 0;
 
         foreach (var data in DataSet)
         {
@@ -50,35 +63,84 @@ public class NearestNeighbors<TClassification>(
             var classification = Classify(k, data, metric, testSet);
             var expectedClassification = data.Classification;
 
-            if (!classification.Equals(expectedClassification)) errorCount++;
+            if (classification == null)
+            {
+                misses++;
+                continue;
+            }
+
+            if (!classification.Equals(expectedClassification))
+            {
+                errorCount++;
+            }
         }
 
         var errorRate = errorCount / (float)DataSet.Count;
+        var coverage = (DataSet.Count - misses) / (float)DataSet.Count;
 
         Console.WriteLine($"Error rate: {errorRate}");
+        Console.WriteLine($"Coverage: {coverage}");
     }
 }
 
 public interface IDataFactory<out TData, TClassification>
     where TData : IData<TClassification>
-    where TClassification : Enum
+    where TClassification : struct, Enum
 {
     public TData CreateData(List<string> values, string classification);
 }
 
-public interface IClassifier<TClassification>
-    where TClassification : Enum
+public static class Classifier
 {
-    public TClassification Classify(
+    public static TClassification? Classify<TClassification, TData>(
         int k,
-        IData<TClassification> data,
+        TData dataCase,
         List<IData<TClassification>> dataSet,
         IMetric metric
-    );
+    )
+        where TClassification : struct, Enum
+        where TData : IData<TClassification>
+    {
+        var neighboursWithDistance = dataSet
+            .Select(neighbour =>
+                (
+                    neighbour,
+                    metric.Calculate(GetTDataParameters(dataCase), GetTDataParameters(neighbour))
+                )
+            )
+            .ToList();
+        neighboursWithDistance.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+
+        var kClosestNeighbours = neighboursWithDistance.Take(k);
+
+        var classifications = kClosestNeighbours
+            .GroupBy(s => s.neighbour.Classification)
+            .Select(g => new { Status = g.Key, Count = g.Count() })
+            .OrderByDescending(x => x.Count)
+            .ToDictionary(x => x.Status, x => x.Count);
+
+        if (classifications.Count == 0)
+            return null;
+
+        var classification = classifications.First();
+        if (classifications.Count(c => c.Value == classification.Value) != 1)
+            return null;
+
+        return classification.Key;
+    }
+
+    private static List<double> GetTDataParameters<TData>(TData data)
+    {
+        return typeof(TData)
+            .GetProperties()
+            .Where(p => p.PropertyType == typeof(double) && p.GetValue(data) != null)
+            .Select(p => (double)p.GetValue(data)!)
+            .ToList();
+    }
 }
 
 public interface IData<TClassification>
-    where TClassification : Enum
+    where TClassification : struct, Enum
 {
     public TClassification Classification { get; set; }
 }

@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ml-knn", "ml-knn\ml-knn.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris", "Iris\Iris.csproj", "{3154504C-BF51-4C25-99BF-F87998750FD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris.Tests", "Iris.Tests\Iris.Tests.csproj", "{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "knn.Tests", "knn.Tests\knn.Tests.csproj", "{069D4ACE-50CD-4FE6-9BB7-39887DD4D0EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

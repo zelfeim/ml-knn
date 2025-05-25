@@ -1,6 +1,6 @@
 namespace ml_knn.Metrics;
 
-public class EuclidesMetric : MetricBase
+public class EuclideanMetric : MetricBase
 {
     public override double Calculate(List<double> xValues, List<double> yValues)
     {
@@ -8,9 +8,7 @@ public class EuclidesMetric : MetricBase
 
         var sum = 0.0;
         for (var i = 0; i < xValues.Count; i++)
-        {
             sum += Math.Pow(xValues[i] - yValues[i], 2);
-        }
 
         return Math.Sqrt(sum);
     }

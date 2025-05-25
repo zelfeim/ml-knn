@@ -7,14 +7,13 @@ using ml_knn.Metrics;
 const int k = 30;
 
 var irisDataFactory = new IrisDataFactory();
-var irisClassifier = new IrisClassifier();
 
-var knnAlgorithm = new NearestNeighbors<IrisClassification>(irisDataFactory, irisClassifier);
+var knnAlgorithm = new NearestNeighbors<IrisClassification>(irisDataFactory);
 
 knnAlgorithm.LoadCsvData("iris.csv");
 
 // Verification loop
 
-knnAlgorithm.TestClassification(k, new EuclidesMetric());
+knnAlgorithm.TestClassification(k, new EuclideanMetric());
 
 // Program loop to pass some value to classify
